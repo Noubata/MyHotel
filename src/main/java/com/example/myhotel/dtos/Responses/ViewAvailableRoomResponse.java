@@ -1,5 +1,6 @@
 package com.example.myhotel.dtos.Responses;
 
+import com.example.myhotel.data.models.RoomStatus;
 import com.example.myhotel.data.models.RoomType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,6 @@ import lombok.Setter;
 public class ViewAvailableRoomResponse {
     private Long id;
     private RoomType roomType;
-    private boolean status;
+    private RoomStatus status;
     private String roomNumber;
 }

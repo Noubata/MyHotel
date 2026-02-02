@@ -1,9 +1,6 @@
 package com.example.myhotel.dtos.Responses;
 
-import com.example.myhotel.data.models.Guest;
-import com.example.myhotel.data.models.Payment;
-import com.example.myhotel.data.models.Room;
-import com.example.myhotel.data.models.RoomType;
+import com.example.myhotel.data.models.*;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
@@ -20,7 +17,8 @@ import java.time.LocalDateTime;
 public class BookRoomResponse {
     private String roomNumber;
     private String bookingReferenceNumber;
-    private double totalPrice;
+    //private double totalPrice;
+    private BookingStatus status;
     private int numberOfNights;
     private String guestName;
     private String phoneNumber;

@@ -1,8 +1,10 @@
 package com.example.myhotel.controllers;
 
 import com.example.myhotel.dtos.Requests.BookRoomRequest;
+import com.example.myhotel.dtos.Requests.CancelReservationRequest;
 import com.example.myhotel.dtos.Responses.APIResponse;
 import com.example.myhotel.dtos.Responses.BookRoomResponse;
+import com.example.myhotel.dtos.Responses.CancelReservationResponse;
 import com.example.myhotel.dtos.Responses.ViewAvailableRoomResponse;
 import com.example.myhotel.services.GuestService;
 import jakarta.validation.Valid;
@@ -25,6 +27,11 @@ public class GuestController {
     @PostMapping("/book-room")
     public ResponseEntity<APIResponse<BookRoomResponse>> bookRoom(@RequestBody @Valid BookRoomRequest request){
         BookRoomResponse response = guestService.bookRoom(request);
+        return ResponseEntity.status(HttpStatus.OK).body(new APIResponse<>(true, response));
+    }
+    @PutMapping("/cancellation")
+    public ResponseEntity<APIResponse<CancelReservationResponse>> cancelReservation(@RequestBody @Valid CancelReservationRequest request){
+        CancelReservationResponse response = guestService.cancelReservation(request);
         return ResponseEntity.status(HttpStatus.OK).body(new APIResponse<>(true, response));
     }
 }
