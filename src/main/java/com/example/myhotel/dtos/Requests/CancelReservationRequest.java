@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CancelReservationRequest {
-    private long bookingReferenceId;
+    private String bookingReferenceNumber;
     private String guestName;
     private String phoneNumber;
 }
