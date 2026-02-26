@@ -18,15 +18,21 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private BookingStatus status;
+    @Column(unique = true)
     private String bookingRoomNumber;
     private LocalDateTime checkInDate;
     private LocalDateTime checkOutDate;
     private int numberOfNights;
-    @ManyToOne
+    @OneToOne(mappedBy = "booking")
     private Payment payment;
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "room_id")
     private Room room;
+//    @ManyToOne
+//    @JoinColumn(name = "hotel_id")
+//    private Hotel hotel;
     @ManyToOne
+    @JoinColumn(name = "guest_id")
     private Guest guest;
 
 }
