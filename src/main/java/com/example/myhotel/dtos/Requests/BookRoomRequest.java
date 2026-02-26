@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BookRoomRequest {
     private Long roomId;
-    private Long guestId;
+    private String email;
     private LocalDateTime checkInDate;
     private int numberOfNights;
     private BookingStatus status;

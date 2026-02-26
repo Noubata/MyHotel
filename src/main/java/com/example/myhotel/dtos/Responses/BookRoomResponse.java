@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 public class BookRoomResponse {
     private String roomNumber;
     private String bookingReferenceNumber;
-    //private double totalPrice;
     private BookingStatus status;
     private int numberOfNights;
     private String guestName;
