@@ -19,4 +19,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> guestNotFound(GuestNotFoundException error){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.getMessage());
     }
+    @ExceptionHandler(GuestFoundException.class)
+    public ResponseEntity<String> handleGuestFoundException(GuestFoundException error){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error.getMessage());
+    }
+    @ExceptionHandler(AdminNotFoundException.class)
+    public ResponseEntity<String> adminNotFound(AdminNotFoundException error){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.getMessage());
+    }
 }
