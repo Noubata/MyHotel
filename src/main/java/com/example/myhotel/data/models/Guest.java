@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,11 +17,14 @@ public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @OneToMany
     @JoinColumn(name = "booking_id")
-    private Booking booking;
+    private List<Booking> bookings;
+    @Column(unique = true, nullable = false)
+    private String email;
     private String fullName;
     private String phoneNumber;
-    private String email;
-
+    @ManyToOne
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
 }

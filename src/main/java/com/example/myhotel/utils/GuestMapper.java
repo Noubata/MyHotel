@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class GuestMapper {
     public static ViewAvailableRoomResponse toResponse(Room room) {
         return new ViewAvailableRoomResponse(
-                room.getId(),
                 room.getRoomType(),
                 room.getStatus(),
                 room.getRoomNumber()
@@ -22,7 +21,7 @@ public class GuestMapper {
     }
     public static BookRoomResponse toResponseBookRoom(Booking booking) {
         BookRoomResponse response = new BookRoomResponse();
-        response.setBookingReferenceNumber(booking.getBookingRoomNumber());
+        response.setBookingReferenceNumber(booking.getBookingReferenceNumber());
         response.setRoomType(booking.getRoom().getRoomType());
         response.setRoomNumber(booking.getRoom().getRoomNumber());
         response.setNumberOfNights(booking.getNumberOfNights());
@@ -34,7 +33,7 @@ public class GuestMapper {
 
     public static CancelReservationResponse toResponseCancelReservation(Booking booking) {
         CancelReservationResponse response = new CancelReservationResponse();
-        response.setBookingReferenceId(booking.getId());
+        response.setBookingReferenceNumber(booking.getId());
         response.setMessage("Booking cancelled successfully!");
         response.setCancellationDate(booking.getCheckInDate());
         response.setRoomNumber(booking.getRoom().getRoomNumber());

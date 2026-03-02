@@ -9,10 +9,7 @@ import com.example.myhotel.dtos.Requests.CancelReservationRequest;
 import com.example.myhotel.dtos.Responses.BookRoomResponse;
 import com.example.myhotel.dtos.Responses.CancelReservationResponse;
 import com.example.myhotel.dtos.Responses.ViewAvailableRoomResponse;
-import com.example.myhotel.exceptions.BookingNotFoundException;
-import com.example.myhotel.exceptions.GuestNotFoundException;
-import com.example.myhotel.exceptions.RoomAlreadyBookedException;
-import com.example.myhotel.exceptions.RoomNotFoundException;
+import com.example.myhotel.exceptions.*;
 import com.example.myhotel.utils.GuestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,9 +46,9 @@ public class GuestServiceImplementation implements GuestService {
         if (roomToBook.getStatus() == RoomStatus.OCCUPIED) {
             throw new RoomAlreadyBookedException("Room already booked");
         }
-        Optional<Guest> guest = guestRepository.findById(request.getGuestId());
+        Optional<Guest> guest = guestRepository.findByEmail(request.getEmail());
         if (guest.isPresent()) {
-            throw new GuestNotFoundException("Guest not found!");
+            throw new GuestFoundException("Guest already exists!");
         }
         Guest guestToBook = guest.get();
 
@@ -68,7 +65,7 @@ public class GuestServiceImplementation implements GuestService {
     }
     @Override
     public CancelReservationResponse cancelReservation (CancelReservationRequest request){
-        Optional<Booking> CancelBooking = bookingRepository.findById(request.getBookingReferenceId());
+        Optional<Booking> CancelBooking = bookingRepository.findByBookingReferenceNumber(request.getBookingReferenceNumber());
         if (!CancelBooking.isPresent()) {
             throw new BookingNotFoundException("Booking not found!");
         }
@@ -77,7 +74,6 @@ public class GuestServiceImplementation implements GuestService {
             throw new BookingNotFoundException("Booking already cancelled!");
         }
         bookingToCancel.setStatus(BookingStatus.CANCELLED);
-
         Booking cancelBooking = bookingRepository.save(bookingToCancel);
         Room room  = bookingToCancel.getRoom();
         room.setStatus(RoomStatus.AVAILABLE);
