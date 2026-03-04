@@ -25,5 +25,6 @@ public class BookRoomRequest {
     private RoomType roomType;
     private String guestName;
     private String phoneNumber;
+    private String roomNumber;
 
 }

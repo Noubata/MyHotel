@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -24,7 +25,6 @@ public class Guest {
     private String email;
     private String fullName;
     private String phoneNumber;
-    @ManyToOne
-    @JoinColumn(name = "hotel_id")
-    private Hotel hotel;
+    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL)
+    private List<Notifications> notifications = new ArrayList<>();
 }

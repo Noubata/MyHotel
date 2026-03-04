@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CancelReservationResponse {
     private BookingStatus status;
-    private Long bookingReferenceNumber;
+    private String bookingReferenceNumber;
     private String message;
     private LocalDateTime cancellationDate;
     private String roomNumber;
