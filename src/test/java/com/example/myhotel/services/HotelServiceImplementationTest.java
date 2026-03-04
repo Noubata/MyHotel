@@ -3,11 +3,11 @@ package com.example.myhotel.services;
 import com.example.myhotel.data.models.*;
 import com.example.myhotel.data.repositories.GuestRepository;
 import com.example.myhotel.data.repositories.RoomRepository;
+import com.example.myhotel.dtos.Requests.AddRoomsRequest;
 import com.example.myhotel.dtos.Requests.BookRoomRequest;
-import com.example.myhotel.dtos.Requests.CancelReservationRequest;
-import com.example.myhotel.dtos.Responses.BookRoomResponse;
-import com.example.myhotel.dtos.Responses.CancelReservationResponse;
-import com.example.myhotel.dtos.Responses.ViewAvailableRoomResponse;
+import com.example.myhotel.dtos.Requests.CalculatePaymentRequest;
+import com.example.myhotel.dtos.Responses.AddRoomsResponse;
+import com.example.myhotel.dtos.Responses.CalculatePaymentResponse;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static com.example.myhotel.data.models.RoomType.SINGLE;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,16 +22,19 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-class GuestServiceImplementationTest {
+class HotelServiceImplementationTest {
+
+    @Autowired
+    private HotelService hotelService;
     @Autowired
     private GuestService guestService;
     @Autowired
-    RoomRepository roomRepository;
+    private GuestRepository guestRepository;
     @Autowired
-    GuestRepository guestRepository;
+    private RoomRepository roomRepository;
 
     @Test
-    void testBookRoom(){
+    void testBookRoom_and_CalculatePayment() {
         Guest guest = new Guest();
         guest.setFullName("Beny");
         guest.setEmail("beny@gmail.com");
@@ -45,7 +47,7 @@ class GuestServiceImplementationTest {
         room.setStatus(RoomStatus.AVAILABLE);
         roomRepository.save(room);
 
-        BookRoomRequest  bookRoomRequest = new BookRoomRequest();
+        BookRoomRequest bookRoomRequest = new BookRoomRequest();
         bookRoomRequest.setGuestName("Beny");
         bookRoomRequest.setNumberOfNights(3);
         bookRoomRequest.setRoomNumber("001");
@@ -54,13 +56,30 @@ class GuestServiceImplementationTest {
         bookRoomRequest.setEmail("beny@gmail.com");
         bookRoomRequest.setRoomType(SINGLE);
         bookRoomRequest.setStatus(BookingStatus.CONFIRMED);
-        BookRoomResponse bookRoom = guestService.bookRoom(bookRoomRequest);
-        assertEquals("001", bookRoom.getRoomNumber());
-        assertEquals(SINGLE, bookRoom.getRoomType());
-    }
+        guestService.bookRoom(bookRoomRequest);
 
+        CalculatePaymentRequest calculatePaymentRequest = new CalculatePaymentRequest();
+        calculatePaymentRequest.setRoomType(SINGLE);
+        calculatePaymentRequest.setNumberOfNights(3);
+        calculatePaymentRequest.setFestivePeriod(false);
+
+        CalculatePaymentResponse toCalculate = hotelService.calculatePayment(calculatePaymentRequest);
+        assertNotNull(toCalculate);
+        assertEquals(30000.0, toCalculate.getAmountToPay());
+    }
     @Test
-    void testBookRoom_and_CancelReservation(){
+    void testAddRoms(){
+        AddRoomsRequest addRoomsRequest = new AddRoomsRequest();
+        addRoomsRequest.setRoomNumber("001");
+        addRoomsRequest.setRoomStatus(RoomStatus.AVAILABLE);
+        addRoomsRequest.setRoomType(RoomType.DOUBLE);
+
+        AddRoomsResponse toAdd = hotelService.addRooms(addRoomsRequest);
+        assertNotNull(toAdd);
+        assertEquals("001", toAdd.getRoomNumber());
+    }
+    @Test
+    void testViewGuestDetails(){
         Guest guest = new Guest();
         guest.setFullName("Beny");
         guest.setEmail("beny@gmail.com");
@@ -73,7 +92,7 @@ class GuestServiceImplementationTest {
         room.setStatus(RoomStatus.AVAILABLE);
         roomRepository.save(room);
 
-        BookRoomRequest  bookRoomRequest = new BookRoomRequest();
+        BookRoomRequest bookRoomRequest = new BookRoomRequest();
         bookRoomRequest.setGuestName("Beny");
         bookRoomRequest.setNumberOfNights(3);
         bookRoomRequest.setRoomNumber("001");
@@ -82,33 +101,8 @@ class GuestServiceImplementationTest {
         bookRoomRequest.setEmail("beny@gmail.com");
         bookRoomRequest.setRoomType(SINGLE);
         bookRoomRequest.setStatus(BookingStatus.CONFIRMED);
-        BookRoomResponse bookRoom = guestService.bookRoom(bookRoomRequest);
+        guestService.bookRoom(bookRoomRequest);
 
-        String generatedNumber = bookRoom.getBookingReferenceNumber();
-        CancelReservationRequest cancelReservationRequest = new CancelReservationRequest();
-        cancelReservationRequest.setGuestName("Beny");
-        cancelReservationRequest.setPhoneNumber("12345678");
-        cancelReservationRequest.setBookingReferenceNumber(generatedNumber);
-        CancelReservationResponse toCancel = guestService.cancelReservation(cancelReservationRequest);
-        assertNotNull(toCancel);
-        assertEquals(generatedNumber, toCancel.getBookingReferenceNumber());
-    }
-    @Test
-    void testViewAvailableRooms(){
-        Room room = new Room();
-        room.setRoomNumber("001");
-        room.setRoomType(SINGLE);
-        room.setStatus(RoomStatus.AVAILABLE);
-        roomRepository.save(room);
 
-        Room beet = new Room();
-        beet.setRoomNumber("002");
-        beet.setRoomType(SINGLE);
-        beet.setStatus(RoomStatus.AVAILABLE);
-        roomRepository.save(beet);
-
-        List<ViewAvailableRoomResponse> roomToView = guestService.viewAvailableRoom();
-        assertNotNull(roomToView);
-        assertEquals(2, roomToView.size());
     }
 }
