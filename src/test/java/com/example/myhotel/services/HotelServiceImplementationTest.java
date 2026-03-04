@@ -3,11 +3,8 @@ package com.example.myhotel.services;
 import com.example.myhotel.data.models.*;
 import com.example.myhotel.data.repositories.GuestRepository;
 import com.example.myhotel.data.repositories.RoomRepository;
-import com.example.myhotel.dtos.Requests.AddRoomsRequest;
-import com.example.myhotel.dtos.Requests.BookRoomRequest;
-import com.example.myhotel.dtos.Requests.CalculatePaymentRequest;
-import com.example.myhotel.dtos.Responses.AddRoomsResponse;
-import com.example.myhotel.dtos.Responses.CalculatePaymentResponse;
+import com.example.myhotel.dtos.Requests.*;
+import com.example.myhotel.dtos.Responses.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +100,49 @@ class HotelServiceImplementationTest {
         bookRoomRequest.setStatus(BookingStatus.CONFIRMED);
         guestService.bookRoom(bookRoomRequest);
 
+        ViewGuestDetailsRequest viewGuestDetailsRequest = new ViewGuestDetailsRequest();
+        viewGuestDetailsRequest.setGuestEmail("beny@gmail.com");
+        ViewGuestDetailsResponse toView = hotelService.viewGuestDetails(viewGuestDetailsRequest);
+        assertNotNull(toView);
+        assertEquals("Beny", toView.getGuestName());
+        assertEquals("12345678", toView.getGuestPhone());
+    }
+    @Test
+    void testMarkRoomAvailable(){
+        Room room = new Room();
+        room.setRoomNumber("001");
+        room.setRoomType(SINGLE);
+        room.setStatus(RoomStatus.OCCUPIED);
+        roomRepository.save(room);
+
+        MarkRoomAvailableRequest markRoomAvailableRequest = new MarkRoomAvailableRequest();
+        markRoomAvailableRequest.setRoomNumber(room.getRoomNumber());
+        markRoomAvailableRequest.setRoomStatus(RoomStatus.AVAILABLE);
+        markRoomAvailableRequest.setRoomType(SINGLE);
+
+        MarkRoomAvailableResponse toMark = hotelService.markRoomAvailable(markRoomAvailableRequest);
+        assertNotNull(toMark);
+        assertEquals(RoomStatus.AVAILABLE, toMark.getRoomStatus());
+    }
+    @Test
+    void testMarkRoomUnavailable(){
+        Room room = new Room();
+        room.setRoomNumber("001");
+        room.setRoomType(SINGLE);
+        room.setStatus(RoomStatus.AVAILABLE);
+        roomRepository.save(room);
+
+        MarkRoomUnavailableRequest markRoomUnavailableRequest = new MarkRoomUnavailableRequest();
+        markRoomUnavailableRequest.setRoomNumber(room.getRoomNumber());
+        markRoomUnavailableRequest.setRoomStatus(RoomStatus.UNDER_MAINTENANCE);
+        markRoomUnavailableRequest.setRoomType(SINGLE);
+
+        MarkRoomUnavailableResponse toMark = hotelService.markRoomUnavailable(markRoomUnavailableRequest);
+        assertNotNull(toMark);
+        assertEquals(RoomStatus.OCCUPIED, toMark.getRoomStatus());
+    }
+    @Test
+    void testNotifyGuest(){
 
     }
 }
