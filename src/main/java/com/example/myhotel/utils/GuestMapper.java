@@ -2,6 +2,7 @@ package com.example.myhotel.utils;
 
 import com.example.myhotel.data.models.Booking;
 import com.example.myhotel.data.models.Room;
+import com.example.myhotel.data.models.RoomType;
 import com.example.myhotel.data.repositories.BookingRepository;
 import com.example.myhotel.data.repositories.RoomRepository;
 import com.example.myhotel.dtos.Requests.BookRoomRequest;
@@ -33,7 +34,7 @@ public class GuestMapper {
 
     public static CancelReservationResponse toResponseCancelReservation(Booking booking) {
         CancelReservationResponse response = new CancelReservationResponse();
-        response.setBookingReferenceNumber(booking.getId());
+        response.setBookingReferenceNumber(booking.getBookingReferenceNumber());
         response.setMessage("Booking cancelled successfully!");
         response.setCancellationDate(booking.getCheckInDate());
         response.setRoomNumber(booking.getRoom().getRoomNumber());

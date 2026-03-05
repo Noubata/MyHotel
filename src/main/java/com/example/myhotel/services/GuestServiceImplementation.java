@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class GuestServiceImplementation implements GuestService {
@@ -26,6 +27,7 @@ public class GuestServiceImplementation implements GuestService {
     private BookingRepository bookingRepository;
     @Autowired
     private GuestRepository guestRepository;
+
     @Override
     public List<ViewAvailableRoomResponse> viewAvailableRoom() {
         List<Room> rooms = roomRepository.findAll();
@@ -38,8 +40,8 @@ public class GuestServiceImplementation implements GuestService {
     }
     @Override
     public BookRoomResponse bookRoom(BookRoomRequest request) {
-        Optional<Room> room = roomRepository.findById(request.getRoomId());
-        if (!room.isPresent()) {
+        Optional<Room> room = roomRepository.findFirstByRoomTypeAndStatus(request.getRoomType(), RoomStatus.AVAILABLE);
+        if (room.isEmpty()) {
             throw new RoomNotFoundException("Room not found!");
         }
         Room roomToBook = room.get();
@@ -47,11 +49,10 @@ public class GuestServiceImplementation implements GuestService {
             throw new RoomAlreadyBookedException("Room already booked");
         }
         Optional<Guest> guest = guestRepository.findByEmail(request.getEmail());
-        if (guest.isPresent()) {
-            throw new GuestFoundException("Guest already exists!");
+        if (guest.isEmpty()) {
+            throw new GuestFoundException("Guest not found!");
         }
         Guest guestToBook = guest.get();
-
         Booking booking = new Booking();
         booking.setRoom(roomToBook);
         booking.setGuest(guestToBook);
@@ -59,6 +60,7 @@ public class GuestServiceImplementation implements GuestService {
         booking.setCheckInDate(request.getCheckInDate());
         booking.setNumberOfNights(request.getNumberOfNights());
         roomToBook.setStatus(RoomStatus.OCCUPIED);
+        booking.setBookingReferenceNumber(UUID.randomUUID().toString());
         roomRepository.save(roomToBook);
         Booking toSave = bookingRepository.save(booking);
         return GuestMapper.toResponseBookRoom(toSave);
@@ -66,7 +68,7 @@ public class GuestServiceImplementation implements GuestService {
     @Override
     public CancelReservationResponse cancelReservation (CancelReservationRequest request){
         Optional<Booking> CancelBooking = bookingRepository.findByBookingReferenceNumber(request.getBookingReferenceNumber());
-        if (!CancelBooking.isPresent()) {
+        if (CancelBooking.isEmpty()) {
             throw new BookingNotFoundException("Booking not found!");
         }
         Booking bookingToCancel = CancelBooking.get();
