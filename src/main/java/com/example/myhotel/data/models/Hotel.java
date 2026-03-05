@@ -17,11 +17,11 @@ public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String bankName;
-    @OneToMany
+    private String hotelName;
+    @OneToMany(mappedBy = "hotel")
     private List<Room> rooms;
-    @OneToMany
-    private List<Guest> guest;
-    @OneToMany
-    private List<Booking> booking;
+//    @OneToMany(mappedBy = "hotel")
+//    private List<Guest> guest;
+//    @OneToMany(mappedBy = "hotel")
+//    private List<Booking> booking;
 }
