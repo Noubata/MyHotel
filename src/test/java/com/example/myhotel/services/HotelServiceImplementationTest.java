@@ -89,16 +89,16 @@ class HotelServiceImplementationTest {
         room.setStatus(RoomStatus.AVAILABLE);
         roomRepository.save(room);
 
-        BookRoomRequest bookRoomRequest = new BookRoomRequest();
-        bookRoomRequest.setGuestName("Beny");
-        bookRoomRequest.setNumberOfNights(3);
-        bookRoomRequest.setRoomNumber("001");
-        bookRoomRequest.setCheckInDate(LocalDateTime.now());
-        bookRoomRequest.setPhoneNumber("12345678");
-        bookRoomRequest.setEmail("beny@gmail.com");
-        bookRoomRequest.setRoomType(SINGLE);
-        bookRoomRequest.setStatus(BookingStatus.CONFIRMED);
-        guestService.bookRoom(bookRoomRequest);
+//        BookRoomRequest bookRoomRequest = new BookRoomRequest();
+//        bookRoomRequest.setGuestName("Beny");
+//        bookRoomRequest.setNumberOfNights(3);
+//        bookRoomRequest.setRoomNumber("001");
+//        bookRoomRequest.setCheckInDate(LocalDateTime.now());
+//        bookRoomRequest.setPhoneNumber("12345678");
+//        bookRoomRequest.setEmail("beny@gmail.com");
+//        bookRoomRequest.setRoomType(SINGLE);
+//        bookRoomRequest.setStatus(BookingStatus.CONFIRMED);
+//        guestService.bookRoom(bookRoomRequest);
 
         ViewGuestDetailsRequest viewGuestDetailsRequest = new ViewGuestDetailsRequest();
         viewGuestDetailsRequest.setGuestEmail("beny@gmail.com");
@@ -143,6 +143,24 @@ class HotelServiceImplementationTest {
     }
     @Test
     void testNotifyGuest(){
+        Guest guest = new Guest();
+        guest.setFullName("Beny");
+        guest.setEmail("beny@gmail.com");
+        guest.setPhoneNumber("12345678");
+        guestRepository.save(guest);
 
+        Room room = new Room();
+        room.setRoomNumber("001");
+        room.setRoomType(SINGLE);
+        room.setStatus(RoomStatus.AVAILABLE);
+        roomRepository.save(room);
+
+        Booking booking = new Booking();
+        booking.setCheckOutDate(LocalDateTime.now());
+
+        NotifyGuestRequest notifyGuestRequest = new NotifyGuestRequest();
+        notifyGuestRequest.setGuestName("Beny");
+        notifyGuestRequest.setNumberOfNights(3);
+        notifyGuestRequest.setBookingReference();
     }
 }

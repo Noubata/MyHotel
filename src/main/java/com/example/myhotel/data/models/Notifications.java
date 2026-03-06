@@ -18,12 +18,10 @@ public class Notifications {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String message;
+    private boolean isSent;
     private LocalDateTime dateTime;
-    private String userNumber;
     @ManyToOne
+    @JoinColumn(name = "booking_id")
     private Guest guest;
-    @ManyToOne
-    private Booking booking;
-    @ManyToOne
-    private Payment payment;
+
 }
