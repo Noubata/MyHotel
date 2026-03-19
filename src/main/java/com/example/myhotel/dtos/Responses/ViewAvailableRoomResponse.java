@@ -12,7 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ViewAvailableRoomResponse {
-    private Long id;
     private RoomType roomType;
     private RoomStatus status;
     private String roomNumber;
