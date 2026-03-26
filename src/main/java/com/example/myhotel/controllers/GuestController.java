@@ -7,6 +7,7 @@ import com.example.myhotel.dtos.Responses.BookRoomResponse;
 import com.example.myhotel.dtos.Responses.CancelReservationResponse;
 import com.example.myhotel.dtos.Responses.ViewAvailableRoomResponse;
 import com.example.myhotel.services.GuestService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,9 @@ public class GuestController {
     public ResponseEntity<APIResponse<CancelReservationResponse>> cancelReservation(@RequestBody @Valid CancelReservationRequest request){
         CancelReservationResponse response = guestService.cancelReservation(request);
         return ResponseEntity.status(HttpStatus.OK).body(new APIResponse<>(true, response));
+    }
+    @GetMapping
+    public String getting(HttpServletRequest request){
+        return request.getSession().getId();
     }
 }

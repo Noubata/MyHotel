@@ -26,5 +26,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AdminNotFoundException.class)
     public ResponseEntity<String> adminNotFound(AdminNotFoundException error){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.getMessage());
+
     }
 }

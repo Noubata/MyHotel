@@ -161,6 +161,5 @@ class HotelServiceImplementationTest {
         NotifyGuestRequest notifyGuestRequest = new NotifyGuestRequest();
         notifyGuestRequest.setGuestName("Beny");
         notifyGuestRequest.setNumberOfNights(3);
-        notifyGuestRequest.setBookingReference();
     }
 }
